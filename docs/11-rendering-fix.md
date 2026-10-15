@@ -15,6 +15,8 @@ vite.config.ts 的 src 明确匹配 `{Assets,Workers,Widgets,ThirdParty}/**/*`�
 新增 tests/assets.build.ts：真正检查 NaturalEarthII 描述文件和 createVerticesFromQuantizedTerrainMesh.js；npm run test:build 在构建后、发布前执行。
 回归测试先观察原配置下 ENOENT，再修正路径并构建验证通过。
 
+关闭 Cesium 内置 showRenderLoopErrors 模态框，改为订阅 scene.renderError 显示中文提示并记录真实原因。图形故障不会让整个网站被英文弹框遮挡，列表和详情继续可用；这只是故障处理，资源复制修复才解决本次已确认的404。
+
 ## 浏览器环境限制
 
 本次远程浏览器另有 WebGL 初始化失败，这属于该测试浏览器的图形能力，不能等同于用户设备上的错误。资源404为独立、已复现的部署问题，先修复并上线。

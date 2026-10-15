@@ -32,7 +32,13 @@ onMounted(async()=>{
   // 自带 Natural Earth 影像可离线显示，不依赖 OSM 公共瓦片或商业默认 token。
   const imagery=await C.TileMapServiceImageryProvider.fromUrl(`${import.meta.env.BASE_URL}cesium/Assets/Textures/NaturalEarthII`);
   if(disposed)return;
-  viewer=new C.Viewer(container.value,{baseLayer:new C.ImageryLayer(imagery),baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,animation:false,timeline:false,fullscreenButton:false,selectionIndicator:false,infoBox:false,requestRenderMode:true,maximumRenderTimeChange:Infinity});
+  viewer=new C.Viewer(container.value,{baseLayer:new C.ImageryLayer(imagery),baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,animation:false,timeline:false,fullscreenButton:false,selectionIndicator:false,infoBox:false,showRenderLoopErrors:false,requestRenderMode:true,maximumRenderTimeChange:Infinity});
+  // 真正的 GPU/运行时故障保留日志与中文提示；不让内置英文模态框阻断资料浏览。
+  viewer.scene.renderError.addEventListener((_scene:unknown,reason:unknown)=>{
+   error.value='三维渲染暂时不可用，火山列表和资料仍可浏览。请刷新页面；若持续发生，请检查浏览器图形加速。';
+   if(viewer)viewer.useDefaultRenderLoop=false;
+   console.error('Cesium rendering failed',reason);
+  });
   viewer.scene.backgroundColor=C.Color.fromCssColorString('#080e19');viewer.scene.globe.baseColor=C.Color.fromCssColorString('#18354a');
   viewer.scene.globe.enableLighting=false;viewer.scene.screenSpaceCameraController.minimumZoomDistance=1000;
   viewer.camera.setView({destination:C.Cartesian3.fromDegrees(118,20,23000000)});
