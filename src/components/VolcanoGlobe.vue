@@ -1,0 +1,48 @@
+<script setup lang="ts">
+/** 三维地球仅负责展示和拾取；搜索/资料由父组件管理，卸载时释放 WebGL 资源。 */
+import {onMounted,onBeforeUnmount,ref,watch} from 'vue';
+import type {Volcano} from '../domain/catalog';
+import {landformColors} from '../domain/catalog';
+const props=defineProps<{items:Volcano[];selected:Volcano|null}>();
+const emit=defineEmits<{select:[id:string];terrain:[enabled:boolean]}>();
+const container=ref<HTMLElement|null>(null);const error=ref('');
+let viewer:import('cesium').Viewer|undefined;
+let handler:import('cesium').ScreenSpaceEventHandler|undefined;
+let C:typeof import('cesium')|undefined;
+let disposed=false;
+/** 目录约千级，批量挂起 entity 事件再更新，避免每点触发一次重绘。 */
+function redraw(){
+ if(!viewer||!C)return;viewer.entities.suspendEvents();viewer.entities.removeAll();
+ for(const v of props.items)viewer.entities.add({id:v.id,position:C.Cartesian3.fromDegrees(v.longitude,v.latitude),point:{pixelSize:v.id===props.selected?.id?13:6,color:C.Color.fromCssColorString(landformColors[v.landform]??'#9aa9bc'),outlineColor:C.Color.fromCssColorString('#101826'),outlineWidth:1,heightReference:C.HeightReference.CLAMP_TO_GROUND,disableDepthTestDistance:0}});
+ viewer.entities.resumeEvents();viewer.scene.requestRender();
+}
+/** 镜头以火山为目标；负海拔不用于把相机放到海底。 */
+function focus(v:Volcano|null){
+ if(!viewer||!C)return;
+ if(v)viewer.camera.flyTo({destination:C.Cartesian3.fromDegrees(v.longitude,v.latitude,Math.max(120000,(v.elevationM??0)*30)),orientation:{heading:0,pitch:-Math.PI/2,roll:0},duration:1.5});
+ else home();
+}
+function home(){if(viewer&&C)viewer.camera.flyTo({destination:C.Cartesian3.fromDegrees(118,20,23000000),duration:1.3})}
+defineExpose({home});
+watch(()=>props.items,redraw);watch(()=>props.selected,v=>{redraw();focus(v)});
+onMounted(async()=>{
+ try{
+  C=await import('cesium');await import('cesium/Build/Cesium/Widgets/widgets.css');
+  if(disposed||!container.value)return;
+  // 自带 Natural Earth 影像可离线显示，不依赖 OSM 公共瓦片或商业默认 token。
+  const imagery=await C.TileMapServiceImageryProvider.fromUrl(`${import.meta.env.BASE_URL}cesium/Assets/Textures/NaturalEarthII`);
+  if(disposed)return;
+  viewer=new C.Viewer(container.value,{baseLayer:new C.ImageryLayer(imagery),baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,animation:false,timeline:false,fullscreenButton:false,selectionIndicator:false,infoBox:false,requestRenderMode:true,maximumRenderTimeChange:Infinity});
+  viewer.scene.backgroundColor=C.Color.fromCssColorString('#080e19');viewer.scene.globe.baseColor=C.Color.fromCssColorString('#18354a');
+  viewer.scene.globe.enableLighting=false;viewer.scene.screenSpaceCameraController.minimumZoomDistance=1000;
+  viewer.camera.setView({destination:C.Cartesian3.fromDegrees(118,20,23000000)});
+  handler=new C.ScreenSpaceEventHandler(viewer.scene.canvas);
+  handler.setInputAction((event:{position:import('cesium').Cartesian2})=>{const picked=viewer?.scene.pick(event.position);if(picked?.id?.id)emit('select',String(picked.id.id));},C.ScreenSpaceEventType.LEFT_CLICK);
+  redraw();if(props.selected)focus(props.selected);
+  const token=import.meta.env.VITE_CESIUM_ION_TOKEN;
+  if(token){try{C.Ion.defaultAccessToken=token;const terrain=await C.createWorldTerrainAsync();if(!disposed&&viewer){viewer.terrainProvider=terrain;emit('terrain',true);viewer.scene.requestRender();}}catch{emit('terrain',false)}}
+ }catch(e){error.value='当前浏览器无法显示三维地球，请使用左侧火山列表浏览资料。';console.error('Globe initialization failed',e);}
+});
+onBeforeUnmount(()=>{disposed=true;handler?.destroy();if(viewer&&!viewer.isDestroyed())viewer.destroy();});
+</script>
+<template><div class="globe-surface" ref="container" aria-label="全球火山三维地球"></div><div v-if="error" class="globe-error" role="status">{{error}}</div></template>

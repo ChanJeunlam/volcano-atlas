@@ -1,0 +1,34 @@
+{
+  "name": "volcano-atlas",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "node --test tests/*.test.ts",
+    "test:data": "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "data:validate": "node scripts/validate-data.mjs",
+    "data:download": "python3 scripts/download-gvp.py",
+    "data:import": "node --env-file=.env.local scripts/import-supabase.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.117.3",
+    "cesium": "1.146.0",
+    "vue": "3.5.44",
+    "vue-router": "5.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@vitejs/plugin-vue": "6.0.10",
+    "typescript": "5.9.3",
+    "vite": "8.3.4",
+    "vite-plugin-static-copy": "4.1.1",
+    "vue-tsc": "3.3.13"
+  }
+}

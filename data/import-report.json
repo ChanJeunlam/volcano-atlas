@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "snapshotId": "c40b30c1-cc04-5efa-8361-36d87d3bfff4",
+    "count": 1214,
+    "retrievedAt": "2026-10-15T01:52:13.415826+00:00",
+    "source": "Smithsonian GVP",
+    "sourceVersion": "5.4.0 (2026-08-07)",
+    "sourceUrl": "https://volcano.si.edu/database/webservices.cfm",
+    "sha256": "f2873251f09eeee9ce6c7c69163f1407c0c191c16adfa3cabe16487b45d942b4",
+    "mode": "snapshot"
+  },
+  "officialReturned": 1214,
+  "officialMatched": 1214,
+  "negativeElevations": 112,
+  "unknownEruptions": 366,
+  "requestUrl": "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=GVP-VOTW%3ASmithsonian_VOTW_Holocene_Volcanoes&outputFormat=application%2Fjson&maxFeatures=5000"
+}

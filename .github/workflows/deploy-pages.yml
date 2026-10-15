@@ -1,0 +1,51 @@
+# Vue/Cesium 构建后发布 dist；数据库私钥不参与此工作流。
+name: Deploy Volcano Atlas to Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Verify code and catalog
+        run: |
+          npm test
+          npm run test:data
+          npm run data:validate
+      - name: Cache approved photographs
+        run: node scripts/cache-photos.mjs
+      - name: Build for repository subpath
+        run: npm run build
+        env:
+          VITE_BASE_PATH: /volcano-atlas/
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+          VITE_CESIUM_ION_TOKEN: ${{ vars.VITE_CESIUM_ION_TOKEN }}
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

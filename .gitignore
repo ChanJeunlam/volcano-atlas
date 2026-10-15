@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env*
+!.env.example
+!.env.server.example
+__pycache__/
+.superpowers/
+.vercel/
+test-results/
+data/raw/
