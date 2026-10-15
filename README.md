@@ -34,6 +34,8 @@ GitHub Pages 需在仓库 Settings → Pages 选择 GitHub Actions；工作流�
 
 阅读顺序：
 
+新增：[三类火山对照表与轮廓图例](docs/12-volcano-types-guide.md)，支持盾状火山、复合火山和火山渣锥教学对比，SVG 轮廓可缩放。
+
 1. [项目设计](docs/01-design.md)：范围、架构、界面和技术选择。
 2. [数据与照片](docs/02-data.md)：官方来源、导入、身份匹配、许可与更新。
 3. [数据库与接口](docs/03-contracts.md)：字段、响应、分页和访问边界。

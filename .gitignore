@@ -9,3 +9,5 @@ __pycache__/
 supabase/.temp/
 test-results/
 data/raw/
+# 用户提供的整张参考截图仅用于本地研究；只发布重绘SVG和中文表格。
+public/images/volcano-types-reference.png
