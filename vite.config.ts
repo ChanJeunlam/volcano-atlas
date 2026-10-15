@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue';
 import {viteStaticCopy} from 'vite-plugin-static-copy';
 export default defineConfig(({mode})=>{
  const env=loadEnv(mode,process.cwd(),'');const base=env.VITE_BASE_PATH||'/';
- return {base,plugins:[vue(),viteStaticCopy({targets:[{src:'node_modules/cesium/Build/Cesium/{Assets,Workers,Widgets,ThirdParty}',dest:'cesium'}]})],
+ // static-copy 4 默认保留源目录；去掉 node_modules/cesium/Build/Cesium 四级前缀。
+ return {base,plugins:[vue(),viteStaticCopy({targets:[{src:'node_modules/cesium/Build/Cesium/{Assets,Workers,Widgets,ThirdParty}/**/*',dest:'cesium',rename:{stripBase:4}}]})],
    define:{CESIUM_BASE_URL:JSON.stringify(`${base}cesium/`)},build:{chunkSizeWarningLimit:1600},server:{host:'0.0.0.0'}};
 });

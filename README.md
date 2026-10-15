@@ -1,8 +1,36 @@
-# volcano-atlas 开发文档包
+# 火山图谱 · volcano-atlas
 
-版本：规划稿 v1，2026-10-15。当前交付为开发前文档，不是已运行或已部署的软件。
+版本：静态网站第一版，2026-10-15。默认 Vue + CesiumJS + 静态数据 + GitHub Pages，无需数据库或后端。保留可选 Vercel API / Supabase 实现供将来扩展。
 
-目标：Vue 全球火山三维浏览网站；GitHub Pages 托管前端，Vercel 提供服务端接口，Supabase 存储目录、喷发和照片元数据。
+Vue 全球火山三维浏览网站：GitHub Pages 托管前端和官方快照。初始收录 1,214 座全新世火山、20 张署名照片；支持中英文名称搜索、国家/形态筛选、地图选点、详情和分享链接。运行时不依赖后端。
+
+**网站：https://chanjeunlam.github.io/volcano-atlas/**
+
+每月 1 日北京时间 09:17，GitHub Actions 从官方 GVP 下载目录 → 校验 → 缓存署名照片 → 构建 → 提交数据 → 发布网站。可在 Actions → Monthly GVP Data Refresh → Run workflow 手动更新。
+详见 [每月更新运维手册](docs/10-monthly-update.md)。数据下载失败、数量下降超过10%或构建失败时停止更新，保留上一次发布。
+
+## 本地启动
+
+安装 Node.js 24 和 Git，克隆仓库后运行：
+
+```bash
+npm ci
+npm run dev
+```
+
+若受限环境报 uv_interface_addresses 错误，使用 `npm run dev -- --host 127.0.0.1`。
+首次需缓存图片：`node scripts/cache-photos.mjs`。图片失败时显示来源链接。
+
+```bash
+npm test
+npm run test:data
+npm run data:validate
+npm run build
+npm run test:build
+```
+
+数据库服务端配置见 `.env.server.example`；前端公开配置见 `.env.example`。不要把数据库私钥放入 VITE_ 环境变量。
+GitHub Pages 需在仓库 Settings → Pages 选择 GitHub Actions；工作流构建 `/volcano-atlas/` 子路径。
 
 阅读顺序：
 
@@ -16,5 +44,5 @@
 
 仓库名统一使用 ASCII `volcano-atlas`，避免输入不易识别的 Unicode 连字符。
 GitHub 仓库：https://github.com/ChanJeunlam/volcano-atlas
-当前仅提交开发文档；尚未创建数据库或部署产品。
+当前采用纯静态发布；数据库与 Vercel 为可选模块。Cesium 资源复制路径修复及复核见 [渲染问题记录](docs/11-rendering-fix.md)。
 本地工作目录：`/workspace/scratch/0b50a7d11424/volcano-atlas`。

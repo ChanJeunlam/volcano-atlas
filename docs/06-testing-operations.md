@@ -1,5 +1,7 @@
 # 06 验收、排错和维护
 
+当前静态版追加必要验证：先 `npm run build` 再 `npm run test:build`，确认 dist/cesium 下的 Worker、影像路径存在。每月更新失败/停用检查见 10-monthly-update.md。
+
 ## 验收清单
 
 | 项目 | 操作 | 通过标准 |

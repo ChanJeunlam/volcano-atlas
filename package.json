@@ -12,6 +12,7 @@
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "vue-tsc --noEmit",
     "test": "node --test tests/*.test.ts",
+    "test:build": "node --test tests/*.build.ts",
     "test:data": "python3 -m unittest discover -s tests -p 'test_*.py'",
     "data:validate": "node scripts/validate-data.mjs",
     "data:download": "python3 scripts/download-gvp.py",

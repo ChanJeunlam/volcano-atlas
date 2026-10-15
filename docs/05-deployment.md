@@ -1,5 +1,7 @@
 # 05 GitHub Pages、Vercel、Supabase 配置
 
+> 当前第一版只需完成 GitHub Pages 配置；E/F 的 Supabase、Vercel 接入为可选扩展，无需执行才能上线。月度更新不需要 PAT、数据库密钥或 Vercel 账户，见 10-monthly-update.md。
+
 ## A. 创建 GitHub 仓库
 
 1. 登录 GitHub，New repository；名称 `volcano-atlas`，所有者确认 `ChanJeunlam`。

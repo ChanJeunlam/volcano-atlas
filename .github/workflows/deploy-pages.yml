@@ -4,13 +4,23 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      refresh_data:
+        description: '发布前从官方 GVP 更新目录'
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      refresh_data:
+        type: boolean
+        default: false
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -27,6 +37,9 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
+      - name: Refresh official GVP snapshot
+        if: inputs.refresh_data == true
+        run: npm run data:download
       - name: Verify code and catalog
         run: |
           npm test
@@ -40,6 +53,21 @@ jobs:
           VITE_BASE_PATH: /volcano-atlas/
           VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
           VITE_CESIUM_ION_TOKEN: ${{ vars.VITE_CESIUM_ION_TOKEN }}
+      - name: Verify built Cesium resources
+        # 发布前实际检查 Worker 和底图路径；类型检查无法发现复制层级错误。
+        run: npm run test:build
+      - name: Save verified refreshed data
+        if: inputs.refresh_data == true
+        run: |
+          git add public/data data/import-report.json
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'data: refresh verified GVP snapshot'
+            git push origin HEAD:main
+          fi
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static artifact
