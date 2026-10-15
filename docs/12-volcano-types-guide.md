@@ -4,7 +4,7 @@
 
 用户提供了一张题为 Table 10.2 — Comparison of the Three Types of Volcanoes 的截图，要求加入对照表并使用三种火山图作图例。
 参考图包括 Shield Volcano、Composite Volcano、Cinder Cone；原书名、作者、版次未提供，不臆测文献来源。
-原始截图仅供本地参考，不上传到公开 GitHub 仓库。网页发布重新整理的中文表格与独立绘制的 SVG 轮廓。
+用户已明确要求公开上传原图。原始截图保存在 public/images/volcano-types-reference.png；网页可展开查看，也可单独打开。
 
 ## 页面入口与交互
 
@@ -16,8 +16,8 @@
 
 ## 绘制与科学边界
 
-src/components/VolcanoProfile.vue 使用独立 SVG path 重绘原图的宽缓盾状、分层高锥和带顶口的小型陡锥。图形为可缩放原生矢量，不将带英文小字的整图压缩成模糊图标。
-三个图标的画布尺寸归一化，用于识别轮廓，不是同一真实比例尺。原参考图底部另有同一比例尺示意，本次不以归一化图标替代真实尺度比较。
+src/components/VolcanoProfile.vue 直接采用用户原图中的宽缓盾状、分层高锥和带顶口的小型陡锥。以 SVG viewBox 分别取山体区域，排除英文小字和坐标轴；不修改 PNG。图例仍受原图像素分辨率限制，不声称是真正的矢量山体。
+三个图标的显示尺寸归一化，用于识别轮廓，不是同一真实比例尺。原图底部同一比例尺示意保留在展开区，不以归一化图标替代真实尺度比较。
 表中2°–10°、约25°、约33°和高度范围均注明教学参考；不是全球火山固定阈值。
 夏威夷约10 km高度指从海底起算，不能和地面海拔混用；截图中尺寸只作为图中示例说明。
 GVP 的 landform/Primary_Volcano_Type 体系比三种教学形态更细，不把 Minor、Cluster、Caldera 或 Pyroclastic cone 自动改成 Cinder cone。原有地图色标和官方类别保持，形态图解独立一行。
@@ -25,10 +25,11 @@ GVP 的 landform/Primary_Volcano_Type 体系比三种教学形态更细，不把
 ## 文件与维护
 
 - src/domain/volcanoProfiles.ts：中文教学文案、形态名称和源图数值。
-- src/components/VolcanoProfile.vue：三种 SVG 轮廓。
-- src/components/VolcanoComparison.vue：中文对照表和来源说明。
+- src/components/VolcanoProfile.vue：原图三种轮廓的 SVG 视口。
+- src/components/VolcanoComparison.vue：中文对照表、原图和来源说明。
+- public/images/volcano-types-reference.png：用户授权公开的原始图片。
 - src/App.vue、src/style.css：入口、图例和响应式布局。
 
-月更 workflow 更新官方目录，不会覆盖以上教学文案和 SVG。未来若取得原书完整引文，在此补充来源与界面说明。
+月更 workflow 更新官方目录，不会覆盖以上教学文案、图例和原图。未来若取得原书完整引文，在此补充来源与界面说明。
 
 验证：类型检查、现有测试、Pages子路径构建和资源回归检查；发布后检查三种入口、对照表和关闭交互。

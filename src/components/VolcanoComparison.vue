@@ -5,6 +5,7 @@ import VolcanoProfile from './VolcanoProfile.vue';
 import {volcanoProfiles,type ProfileType} from '../domain/volcanoProfiles';
 defineProps<{active:ProfileType}>();
 const emit=defineEmits<{close:[]}>();const panel=ref<HTMLDialogElement|null>(null);
+const referenceUrl=`${import.meta.env.BASE_URL}images/volcano-types-reference.png`;
 onMounted(()=>panel.value?.showModal());
 </script>
 <template>
@@ -13,6 +14,6 @@ onMounted(()=>panel.value?.showModal());
   <div class="profile-cards"><article v-for="p in volcanoProfiles" :key="p.key" :class="{'profile-highlight':active===p.key}"><VolcanoProfile :type="p.key" :label="p.label"/><h3 :style="{color:p.color}">{{p.label}}</h3><small>{{p.english}}</small><p>{{p.shape}}</p></article></div>
   <div class="comparison-scroll"><table><caption>三种火山形态对照 · 根据提供的 Table 10.2 整理</caption><thead><tr><th scope="col">对比维度</th><th v-for="p in volcanoProfiles" :key="p.key" scope="col">{{p.label}}</th></tr></thead><tbody><tr><th scope="row">典型坡度</th><td v-for="p in volcanoProfiles" :key="p.key">{{p.slope}}</td></tr><tr><th scope="row">主要组成</th><td v-for="p in volcanoProfiles" :key="p.key">{{p.composition}}</td></tr><tr><th scope="row">图中尺度</th><td v-for="p in volcanoProfiles" :key="p.key">{{p.scale}}</td></tr></tbody></table></div>
   <p class="comparison-note">轮廓图为归一化示意，并非同一比例尺。坡度和尺寸是教学参考，不是所有火山的固定范围。地图仍保留 GVP 的破火山口、火山群等分类，不强制归入这三类。</p>
-  <p class="comparison-reference">参考：用户提供的 Table 10.2。中文表格重新整理，SVG 轮廓重新绘制；原书名与作者未提供。</p>
+  <details class="comparison-reference"><summary>查看原始对照图</summary><img :src="referenceUrl" alt="Table 10.2：盾状火山、复合火山和火山渣锥的形态、组成与同一比例尺对照" loading="lazy"><p>图源：用户提供的 Table 10.2 截图。原书名与作者未提供；三种图例直接采用图中山体轮廓。</p><a :href="referenceUrl" target="_blank" rel="noopener noreferrer">单独打开原图 ↗</a></details>
  </dialog>
 </template>
