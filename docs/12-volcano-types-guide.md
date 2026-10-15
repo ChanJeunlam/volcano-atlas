@@ -3,7 +3,9 @@
 ## 用户需求与来源
 
 用户提供了一张题为 Table 10.2 — Comparison of the Three Types of Volcanoes 的截图，要求加入对照表并使用三种火山图作图例。
-参考图包括 Shield Volcano、Composite Volcano、Cinder Cone；原书名、作者、版次未提供，不臆测文献来源。
+参考图包括 Shield Volcano、Composite Volcano、Cinder Cone。
+用户已确认书籍为 **Physical Geology: Earth Revealed**，作者 **Diane H. Carlson、Charles C. Plummer、David McGeary**；对应 **Table 10.2 — Comparison of the Three Types of Volcanoes**。
+版次、出版年份和页码尚未提供，不根据作者名单推断。页面保留既有中文介绍与对照内容，只补充已确认书名和作者。
 用户已明确要求公开上传原图。原始截图保存在 public/images/volcano-types-reference.png；网页可展开查看，也可单独打开。
 
 ## 页面入口与交互
@@ -30,6 +32,6 @@ GVP 的 landform/Primary_Volcano_Type 体系比三种教学形态更细，不把
 - public/images/volcano-types-reference.png：用户授权公开的原始图片。
 - src/App.vue、src/style.css：入口、图例和响应式布局。
 
-月更 workflow 更新官方目录，不会覆盖以上教学文案、图例和原图。未来若取得原书完整引文，在此补充来源与界面说明。
+月更 workflow 更新官方目录，不会覆盖以上教学文案、图例、原图或书籍署名。未来若取得版次、年份与页码，再补充完整引文。
 
 验证：类型检查、现有测试、Pages子路径构建和资源回归检查；发布后检查三种入口、对照表和关闭交互。
