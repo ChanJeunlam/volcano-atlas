@@ -18,7 +18,7 @@ function redraw(){
  // 选中的火山即使被筛选隐藏，也保留在地图中，保证档案与地图一致。
  const visible=props.selected&&!props.items.some(v=>v.id===props.selected!.id)?[...props.items,props.selected]:props.items;
  for(const v of visible){const active=v.id===props.selected?.id;
- viewer.entities.add({id:v.id,position:C.Cartesian3.fromDegrees(v.longitude,v.latitude),billboard:{image:markerImage(v.landform,v.photos.length>0,active),width:active?34:24,height:active?30:21,heightReference:C.HeightReference.CLAMP_TO_GROUND,disableDepthTestDistance:0},label:active?{text:`✓ ${v.nameZh||v.nameEn}`,font:'bold 15px sans-serif',fillColor:C.Color.WHITE,showBackground:true,backgroundColor:C.Color.fromCssColorString('#101826'),pixelOffset:new C.Cartesian2(0,-27),heightReference:C.HeightReference.CLAMP_TO_GROUND}:undefined});
+ viewer.entities.add({id:v.id,position:C.Cartesian3.fromDegrees(v.longitude,v.latitude),billboard:{image:markerImage(v.landform,v.photos.length>0,active),width:active?20:12,height:active?18:11,heightReference:C.HeightReference.CLAMP_TO_GROUND,disableDepthTestDistance:0},label:active?{text:`✓ ${v.nameZh||v.nameEn}`,font:'bold 15px sans-serif',fillColor:C.Color.WHITE,showBackground:true,backgroundColor:C.Color.fromCssColorString('#101826'),pixelOffset:new C.Cartesian2(0,-27),heightReference:C.HeightReference.CLAMP_TO_GROUND}:undefined});
  }
  viewer.entities.resumeEvents();viewer.scene.requestRender();
 }
