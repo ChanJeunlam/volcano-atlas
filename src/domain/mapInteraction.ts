@@ -23,7 +23,7 @@ const cache=new Map<string,string>();
 export function markerImage(type:string,photo=false,selected=false):string{
  const kind=type.startsWith('Minor')?'Minor':shapes[type]?type:'Unknown';const key=`${kind}:${photo}:${selected}`;
  if(cache.has(key))return cache.get(key)!;
- const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 56"><path d="${shapes[kind]}" fill="${colors[kind]}" stroke="#101826" stroke-width="3" stroke-linejoin="round"/>${photo?'<rect x="43" y="4" width="19" height="15" rx="3" fill="#f8fafc" stroke="#101826" stroke-width="2"/><circle cx="52" cy="11.5" r="4" fill="#18354a"/>':''}${selected?'<path d="M3 17V3H17M47 3H61V17M3 39V53H17M47 53H61V39" fill="none" stroke="#fff4a3" stroke-width="3"/>':''}</svg>`;
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 56"><path d="${shapes[kind]}" fill="${selected?'#fff3a0':colors[kind]}" stroke="${selected?'#ffffff':'#101826'}" stroke-width="${selected?4:3}" stroke-linejoin="round"/>${photo?'<rect x="43" y="4" width="19" height="15" rx="3" fill="#f8fafc" stroke="#101826" stroke-width="2"/><circle cx="52" cy="11.5" r="4" fill="#18354a"/>':''}${selected?'<path d="M3 17V3H17M47 3H61V17M3 39V53H17M47 53H61V39" fill="none" stroke="#fff4a3" stroke-width="3"/>':''}</svg>`;
  const image=`data:image/svg+xml,${encodeURIComponent(svg)}`;cache.set(key,image);return image;
 }
 

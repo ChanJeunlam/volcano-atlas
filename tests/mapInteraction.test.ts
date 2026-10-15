@@ -6,3 +6,5 @@ test('picking handles overlapping entities and ignores globe primitives',()=>{as
 test('map categories use distinct self-contained SVG silhouettes',()=>{const icons=['Composite','Shield','Caldera','Cluster','Unknown'].map(t=>markerImage(t));assert.equal(new Set(icons).size,5);assert.ok(icons.every(x=>x.startsWith('data:image/svg+xml,')));assert.notEqual(markerImage('Shield'),markerImage('Shield',true,true));});
 
 test('photos first and GVP ascending within both groups',()=>{const rows=[{id:'300000',photos:[]},{id:'400000',photos:[{}]},{id:'100000',photos:[]},{id:'200000',photos:[{}]}];assert.deepEqual(rows.sort((a,b)=>compareVolcanoes(a as never,b as never)).map(v=>v.id),['200000','400000','100000','300000']);});
+
+test('selected volcano body has a bright fill and white outline',()=>{const svg=decodeURIComponent(markerImage('Composite',false,true));assert.ok(svg.includes('fill="#fff3a0"'));assert.ok(svg.includes('stroke="#ffffff"'));assert.ok(!decodeURIComponent(markerImage('Composite')).includes('fill="#fff3a0"'));});
