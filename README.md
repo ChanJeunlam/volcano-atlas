@@ -48,3 +48,5 @@ GitHub Pages 需在仓库 Settings → Pages 选择 GitHub Actions；工作流�
 GitHub 仓库：https://github.com/ChanJeunlam/volcano-atlas
 当前采用纯静态发布；数据库与 Vercel 为可选模块。Cesium 资源复制路径修复及复核见 [渲染问题记录](docs/11-rendering-fix.md)。
 本地工作目录：`/workspace/scratch/0b50a7d11424/volcano-atlas`。
+
+地图选择、SVG 形态标记、照片筛选及验收步骤见 [地图交互文档](docs/13-map-interaction.md)。所有火山均可查看档案；相机徽章表示该记录包含已核验照片。

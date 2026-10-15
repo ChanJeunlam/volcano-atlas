@@ -3,7 +3,7 @@
 import {usePhotoState} from '../composables/usePhotoState';
 import {formatYear,landformLabels,type Volcano} from '../domain/catalog';
 const props=defineProps<{volcano:Volcano;loading:boolean;error:string}>();
-const emit=defineEmits<{close:[]}>();const {broken,photoIndex}=usePhotoState(()=>props.volcano);
+const emit=defineEmits<{close:[];retry:[]}>();const {broken,photoIndex}=usePhotoState(()=>props.volcano);
 /** CI 图片以 local: 标记，按当前部署 base 解析；避免 Pages 子路径 404。 */
 function photoUrl(url:string){return url.startsWith('local:')?`${import.meta.env.BASE_URL}${url.slice(6)}`:url;}
 </script>
@@ -18,9 +18,9 @@ function photoUrl(url:string){return url.startsWith('local:')?`${import.meta.env
   <div class="detail-body">
    <span class="eyebrow">{{volcano.countries.join(' / ')}}</span>
    <h2>{{volcano.nameZh||volcano.nameEn}}</h2><p v-if="volcano.nameZh" class="english-name">{{volcano.nameEn}}</p>
-   <span class="type-pill">{{landformLabels[volcano.landform]||volcano.landform}}</span>
+   <p class="detail-availability">✓ 已选中 · {{volcano.photos.length?'有已核验照片':'基础档案 · 暂无已核验照片'}}</p><span class="type-pill">{{landformLabels[volcano.landform]||volcano.landform}}</span>
    <dl class="facts"><div><dt>海拔</dt><dd>{{volcano.elevationM===null?'未知':volcano.elevationM.toLocaleString()+' m'}}</dd></div><div><dt>最近已知喷发</dt><dd>{{formatYear(volcano.lastEruptionYear)}}</dd></div><div><dt>纬度</dt><dd>{{Math.abs(volcano.latitude).toFixed(3)}}° {{volcano.latitude<0?'S':'N'}}</dd></div><div><dt>经度</dt><dd>{{Math.abs(volcano.longitude).toFixed(3)}}° {{volcano.longitude<0?'W':'E'}}</dd></div></dl>
-   <section class="detail-section"><h3>地质背景 <span>GEOLOGICAL CONTEXT</span></h3><p>{{volcano.region||'区域信息未知'}}</p><p class="muted">{{volcano.tectonicSetting}}</p><p v-if="loading" role="status">正在读取地质说明…</p><p v-else-if="error" class="muted">{{error}}</p><p v-else class="geology-text">{{volcano.summary||'详见官方资料页。'}}</p><small>地质说明保留官方英文，避免自动翻译改变科学含义。</small></section>
+   <section class="detail-section"><h3>地质背景 <span>GEOLOGICAL CONTEXT</span></h3><p>{{volcano.region||'区域信息未知'}}</p><p class="muted">{{volcano.tectonicSetting}}</p><p v-if="loading" role="status">正在读取地质说明…</p><p v-else-if="error" class="muted" role="alert">{{error}} <button @click="emit('retry')">重新加载档案</button></p><p v-else class="geology-text">{{volcano.summary||'详见官方资料页。'}}</p><small>地质说明保留官方英文，避免自动翻译改变科学含义。</small></section>
    <section v-if="volcano.photos[photoIndex]" class="attribution"><p>{{volcano.photos[photoIndex]!.caption}}</p><p>作者：{{volcano.photos[photoIndex]!.author}}</p><a :href="volcano.photos[photoIndex]!.licenseUrl" target="_blank" rel="noopener noreferrer">{{volcano.photos[photoIndex]!.license}}</a><span> · </span><a :href="volcano.photos[photoIndex]!.sourcePageUrl" target="_blank" rel="noopener noreferrer">原图与来源 ↗</a></section>
    <a class="source-button" :href="volcano.sourceUrl" target="_blank" rel="noopener noreferrer">阅读 Smithsonian GVP 档案 <span>↗</span></a>
    <p class="detail-note">最近喷发年份不代表当前活动状态或危险等级。全新世目录约覆盖过去 12,000 年。</p>

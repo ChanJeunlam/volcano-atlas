@@ -21,5 +21,5 @@ export function validateCatalog(value:unknown):Catalog {
 }
 /** 目录给出年份而非日期；未知、公元前和公元年份分别展示。 */
 export function formatYear(year:number|null):string {return year===null||!Number.isFinite(year)?'未知':year<0?`公元前 ${Math.abs(year)} 年`:`${year} 年`}
-export const landformLabels:Record<string,string>={Composite:'复合火山',Shield:'盾状火山',Caldera:'破火山口',Cluster:'火山群',Minor:'小型火山','Minor (Silicic)':'小型硅质火山',Unknown:'未知形态'};
+export const landformLabels:Record<string,string>={Composite:'复合火山',Shield:'盾状火山',Caldera:'破火山口',Cluster:'火山群','Minor (Basaltic)':'小型玄武质火山',Minor:'小型火山','Minor (Silicic)':'小型硅质火山',Unknown:'未知形态'};
 export const landformColors:Record<string,string>={Composite:'#ff8757',Shield:'#f5c56d',Caldera:'#bd9bff',Cluster:'#64cdbb',Minor:'#8caecc','Minor (Silicic)':'#91b1d3',Unknown:'#9aa9bc'};
