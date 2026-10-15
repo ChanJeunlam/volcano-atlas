@@ -21,7 +21,7 @@ function redraw(){
  const visible=props.selected&&!props.items.some(v=>v.id===props.selected!.id)?[...props.items,props.selected]:props.items;
  const byId=new Map(visible.map(v=>[v.id,v]));
  syncMapEntities(viewer.entities,visible.map(v=>v.id),id=>{const v=byId.get(id)!;const active=v.id===props.selected?.id;
- return {position:new cesium.ConstantPositionProperty(cesium.Cartesian3.fromDegrees(v.longitude,v.latitude)),billboard:new cesium.BillboardGraphics({image:markerImage(v.landform,v.photos.length>0,active),width:active?20:12,height:active?18:11,heightReference:cesium.HeightReference.CLAMP_TO_GROUND,disableDepthTestDistance:0}),label:active?new cesium.LabelGraphics({text:`✓ ${v.nameZh||v.nameEn}`,font:'bold 15px sans-serif',fillColor:cesium.Color.WHITE,showBackground:true,backgroundColor:cesium.Color.fromCssColorString('#101826'),pixelOffset:new cesium.Cartesian2(0,-27),heightReference:cesium.HeightReference.CLAMP_TO_GROUND}):undefined};
+ return {position:new cesium.ConstantPositionProperty(cesium.Cartesian3.fromDegrees(v.longitude,v.latitude)),billboard:new cesium.BillboardGraphics({image:markerImage(v.landform,v.photos.length>0,active),width:active?28:20,height:active?25:18,heightReference:cesium.HeightReference.CLAMP_TO_GROUND,disableDepthTestDistance:0}),label:active?new cesium.LabelGraphics({text:`✓ ${v.nameZh||v.nameEn}`,font:'bold 15px sans-serif',fillColor:cesium.Color.WHITE,showBackground:true,backgroundColor:cesium.Color.fromCssColorString('#101826'),pixelOffset:new cesium.Cartesian2(0,-27),heightReference:cesium.HeightReference.CLAMP_TO_GROUND}):undefined};
  });
  viewer.scene.requestRender();
 }
