@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /** 三维地球仅负责展示和拾取；搜索/资料由父组件管理，卸载时释放 WebGL 资源。 */
 import {onMounted,onBeforeUnmount,ref,watch} from 'vue';
+import {syncMapEntities} from '../domain/syncMapEntities';
 import type {Volcano} from '../domain/catalog';
 import {markerImage,pickedIds,selectionHeight,compareVolcanoes} from '../domain/mapInteraction';
 const props=defineProps<{items:Volcano[];selected:Volcano|null}>();
@@ -14,13 +15,15 @@ let C:typeof import('cesium')|undefined;
 let disposed=false;
 /** 目录约千级，批量挂起 entity 事件再更新，避免每点触发一次重绘。 */
 function redraw(){
- if(!viewer||!C)return;viewer.entities.suspendEvents();viewer.entities.removeAll();
+ if(!viewer||!C)return;
+ const cesium=C;
  // 选中的火山即使被筛选隐藏，也保留在地图中，保证档案与地图一致。
  const visible=props.selected&&!props.items.some(v=>v.id===props.selected!.id)?[...props.items,props.selected]:props.items;
- for(const v of visible){const active=v.id===props.selected?.id;
- viewer.entities.add({id:v.id,position:C.Cartesian3.fromDegrees(v.longitude,v.latitude),billboard:{image:markerImage(v.landform,v.photos.length>0,active),width:active?20:12,height:active?18:11,heightReference:C.HeightReference.CLAMP_TO_GROUND,disableDepthTestDistance:0},label:active?{text:`✓ ${v.nameZh||v.nameEn}`,font:'bold 15px sans-serif',fillColor:C.Color.WHITE,showBackground:true,backgroundColor:C.Color.fromCssColorString('#101826'),pixelOffset:new C.Cartesian2(0,-27),heightReference:C.HeightReference.CLAMP_TO_GROUND}:undefined});
- }
- viewer.entities.resumeEvents();viewer.scene.requestRender();
+ const byId=new Map(visible.map(v=>[v.id,v]));
+ syncMapEntities(viewer.entities,visible.map(v=>v.id),id=>{const v=byId.get(id)!;const active=v.id===props.selected?.id;
+ return {position:new cesium.ConstantPositionProperty(cesium.Cartesian3.fromDegrees(v.longitude,v.latitude)),billboard:new cesium.BillboardGraphics({image:markerImage(v.landform,v.photos.length>0,active),width:active?20:12,height:active?18:11,heightReference:cesium.HeightReference.CLAMP_TO_GROUND,disableDepthTestDistance:0}),label:active?new cesium.LabelGraphics({text:`✓ ${v.nameZh||v.nameEn}`,font:'bold 15px sans-serif',fillColor:cesium.Color.WHITE,showBackground:true,backgroundColor:cesium.Color.fromCssColorString('#101826'),pixelOffset:new cesium.Cartesian2(0,-27),heightReference:cesium.HeightReference.CLAMP_TO_GROUND}):undefined};
+ });
+ viewer.scene.requestRender();
 }
 /** 镜头以火山为目标；负海拔不用于把相机放到海底。 */
 function focus(v:Volcano|null){

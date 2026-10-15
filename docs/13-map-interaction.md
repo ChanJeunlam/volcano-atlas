@@ -41,3 +41,7 @@
 根据实际使用反馈缩小地图普通图标，保留 32×32px 拾取容错，因此视觉尺寸缩小不降低点击容错。选中不仅显示外围提示，山体本身也变为高亮色和白色粗描边。列表与图例的大小不随地图缩小。
 
 用户再次确认普通地图图标宽度为 12px；选中图标宽度为 20px，继续使用亮黄色山体、白色描边与名称标签，拾取容错保持 32×32px。
+
+## 切换后旧高亮残留修复
+
+根因：在 `suspendEvents` 期间删除所有实体并用相同 ID 重建，EntityCollection.add 会抵消 removedEntities 中同 ID 的删除记录，导致 collectionChanged 不上报替换；Cesium visualizer 仍引用旧实体。修复为 syncMapEntities 原位更新已有实体的 billboard/label，只有筛选真正移除的 ID 才删除。回归测试使用真实 Cesium EntityCollection 验证 Marsili 与另一火山切换时对象身份保持、旧状态取消与新状态生效。实际 GPU 视觉验收仍需支持 WebGL 的浏览器。
