@@ -1,12 +1,11 @@
 <script setup lang="ts">
 /** 图片及作者元数据以纯文本渲染；不将上游 HTML 注入 DOM。 */
-import {ref,watch} from 'vue';
+import {usePhotoState} from '../composables/usePhotoState';
 import {formatYear,landformLabels,type Volcano} from '../domain/catalog';
 const props=defineProps<{volcano:Volcano;loading:boolean;error:string}>();
-const emit=defineEmits<{close:[]}>();const broken=ref(false);const photoIndex=ref(0);
+const emit=defineEmits<{close:[]}>();const {broken,photoIndex}=usePhotoState(()=>props.volcano);
 /** CI 图片以 local: 标记，按当前部署 base 解析；避免 Pages 子路径 404。 */
 function photoUrl(url:string){return url.startsWith('local:')?`${import.meta.env.BASE_URL}${url.slice(6)}`:url;}
-watch(()=>props.volcano.id,()=>{broken.value=false;photoIndex.value=0});
 </script>
 <template>
  <aside class="detail-panel" aria-label="火山详情">

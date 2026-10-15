@@ -10,6 +10,7 @@ permissions:
   id-token: write
 jobs:
   refresh-and-publish:
+    if: github.ref == 'refs/heads/main'
     # 直接复用发布流程，避免 bot push 不触发另一个 workflow 而导致网站未更新。
     uses: ./.github/workflows/deploy-pages.yml
     with:

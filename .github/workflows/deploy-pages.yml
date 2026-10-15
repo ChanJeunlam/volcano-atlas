@@ -23,6 +23,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy:
+    # 手动运行也仅允许 main；避免把其他分支提交到 main。
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

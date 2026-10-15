@@ -24,6 +24,7 @@ contents:write 用于提交数据；pages:write 和 id-token:write 用于发布�
 1. 打开仓库 Actions。
 2. 选择 Monthly GVP Data Refresh。
 3. 点击 Run workflow，选择 main，再确认运行。
+   非 main 分支会被跳过，不会把其他分支推送到 main。
 4. 查看 download、verify、build、save、deploy 步骤；最终全部成功才表示更新已发布。
 
 只发布现有数据：选择 Deploy Volcano Atlas to Pages，refresh_data 保持 false。
